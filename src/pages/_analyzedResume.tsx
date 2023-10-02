@@ -13,7 +13,7 @@ import {
     Flex,
 } from "@mantine/core"
 import classes from "../styles/CardGradient.module.css"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { IconBriefcase, IconDownload, IconUser } from "@tabler/icons-react"
 import { notifications } from "@mantine/notifications"
@@ -33,10 +33,11 @@ export default function AnalyzedResume() {
     }
     const [data, setData] = useState<ResumeData>()
     const [isLoading, setLoading] = useState(true)
-    const deleteData = async (key: string) => {
+    const fetchDataRef = useRef<() => Promise<void>>(async () => {})
+    const deleteData = useCallback(async (key: string) => {
         try {
             const response = await axios.delete(
-                `http://127.0.0.1:8000/delete?key=${key}`, // Use DELETE request instead of POST for deleting data
+                `http://127.0.0.1:8000/delete?key=${key}`,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -53,6 +54,7 @@ export default function AnalyzedResume() {
                     color: "red",
                     loading: false,
                 })
+                fetchDataRef.current()
             } else {
                 console.error(
                     `Error deleting data. Status code: ${response.status}`
@@ -62,7 +64,8 @@ export default function AnalyzedResume() {
             console.error(error)
             console.log("Error deleting data")
         }
-    }
+    }, []) // Empty dependency array since deleteData doesn't depend on any external variables or props
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -77,9 +80,10 @@ export default function AnalyzedResume() {
                 console.log(error)
             }
         }
+        fetchDataRef.current = fetchData
         fetchData()
-        // console.log("data")
-    }, [deleteData])
+    }, [])
+
     return (
         <>
             <Container size="sm" className={classes.wrapper}>

@@ -330,10 +330,8 @@ export default function Home() {
                                 <List>
                                     {data?.candidate1?.strengths.map(
                                         (strength, index) => (
-                                            <Text c="dimmed">
-                                                <ListItem key={index}>
-                                                    {strength}
-                                                </ListItem>
+                                            <Text c="dimmed" key={index}>
+                                                <ListItem>{strength}</ListItem>
                                             </Text>
                                         )
                                     )}
@@ -351,10 +349,8 @@ export default function Home() {
                                 <List>
                                     {data?.candidate1?.weaknesses.map(
                                         (strength, index) => (
-                                            <Text c="dimmed">
-                                                <ListItem key={index}>
-                                                    {strength}
-                                                </ListItem>
+                                            <Text c="dimmed" key={index}>
+                                                <ListItem>{strength}</ListItem>
                                             </Text>
                                         )
                                     )}
