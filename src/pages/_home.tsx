@@ -88,12 +88,16 @@ export default function Home() {
             setLoading(true)
             setShowResults(false)
             axios
-                .post("http://127.0.0.1:8000/add", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        accept: "application/json",
-                    },
-                })
+                .post(
+                    "https://cce106resubot-backend.onrender.com/add", // "http://127.0.0.1:8000/add", // "https://cce106resubot-backend.onrender.com/add",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            accept: "application/json",
+                        },
+                    }
+                )
                 .then(function (response) {
                     if (response.status === 200) {
                         setData(response.data)
