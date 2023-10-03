@@ -161,11 +161,10 @@ export default function Home() {
                             Resume Analysis
                         </Title>
                         <Text className={classes.description} c="dimmed">
-                            ResuBot uses AI to organize resume data, rank
-                            candidates, assess skills, and offer customizable
-                            screening criteria. AI-driven insights aid
-                            recruiters in decision-making and process
-                            improvement.
+                            ResuBot utilizes AI technology to thoroughly assess
+                            resumes, providing valuable insights that assist
+                            recruiters in making informed decisions and
+                            streamlining their recruitment processes.
                         </Text>
                     </div>
 
