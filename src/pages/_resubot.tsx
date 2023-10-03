@@ -93,10 +93,10 @@ export default function App() {
                     />
                     <Title className={title.title}>
                         ResuB
-                        <ThemeIcon radius="md" size="lg" color="blue">
+                        {/* <ThemeIcon radius="md" size="lg" color="blue">
                             <IconBrandOpenai />
-                        </ThemeIcon>
-                        t
+                        </ThemeIcon> */}
+                        ot
                     </Title>
                     <Group justify="center">
                         <ActionIcon

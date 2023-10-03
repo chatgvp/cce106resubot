@@ -37,7 +37,7 @@ export default function AnalyzedResume() {
     const deleteData = useCallback(async (key: string) => {
         try {
             const response = await axios.delete(
-                `http://127.0.0.1:8000/delete?key=${key}`,
+                `https://cce106resubot-backend.onrender.com/delete?key=${key}`,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export default function AnalyzedResume() {
         async function fetchData() {
             try {
                 const response = await axios
-                    .get("http://127.0.0.1:8000/get")
+                    .get("https://cce106resubot-backend.onrender.com/get")
                     .then(function (response) {
                         setData(response.data)
                         // console.log(response)
