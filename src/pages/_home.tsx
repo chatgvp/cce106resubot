@@ -106,7 +106,7 @@ export default function Home() {
             setShowResults(false)
             axios
                 .post(
-                    "http://127.0.0.1:8000/add", // "https://cce106resubot-backend.onrender.com/add", // // "https://cce106resubot-backend.onrender.com/add",
+                    "https://cce106resubot-backend.onrender.com/add", // "https://cce106resubot-backend.onrender.com/add", // // "https://cce106resubot-backend.onrender.com/add",
                     formData,
                     {
                         headers: {
@@ -178,7 +178,7 @@ export default function Home() {
         formData.append("note", note)
         try {
             const response = await axios.post(
-                "http://127.0.0.1:8000/save",
+                "https://cce106resubot-backend.onrender.com/save",
                 formData,
                 {
                     headers: {

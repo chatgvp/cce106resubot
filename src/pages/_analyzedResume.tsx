@@ -175,7 +175,7 @@ export default function AnalyzedResume() {
     const updateData = async (key: string, newValue: string) => {
         try {
             const response = await axios.post(
-                `http://localhost:8000/update?key=${key}&new_note=${newValue}`,
+                `https://cce106resubot-backend.onrender.com/update?key=${key}&new_note=${newValue}`,
                 {
                     headers: {
                         "Content-Type": "application/json",
