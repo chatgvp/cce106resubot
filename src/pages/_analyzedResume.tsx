@@ -207,7 +207,7 @@ export default function AnalyzedResume() {
     const openModal = (candidateData: ResumeData) =>
         modals.open({
             centered: true,
-            title: "Please confirm your action",
+            title: "Application Analysis Report",
             size: "xl",
             children: (
                 <div>
