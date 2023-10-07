@@ -30,6 +30,7 @@ import {
 } from "@tabler/icons-react"
 // import { GithubIcon } from "@mantine/ds"
 import { notifications } from "@mantine/notifications"
+import { modals } from "@mantine/modals"
 
 export default function Home() {
     interface ResumeData {
@@ -44,42 +45,58 @@ export default function Home() {
         }
         summary: string
     }
-    const initialData = {
-        job_title: "",
-        job_qualifications: "",
-        pdf_url: "",
-        candidate1: {
-            name: "",
-            qualification_percentage: "",
-            strengths: [],
-            weaknesses: [],
-        },
-        summary: "",
-    }
     const [jobTitle, setJobTitle] = useState("")
-    const [jobDescription, setJobDescription] = useState("")
+
     const [file, setFile] = useState<File | null>(null)
     const [loading, setLoading] = useState(false)
+    const [saved, setSaved] = useState(false)
     const [data, setData] = useState<ResumeData | null>(null)
     const [showResults, setShowResults] = useState(false)
-
+    const [textAreaValue, setTextAreaValue] = useState("")
+    const [jobDescription, setJobDescription] = useState("")
     const handleJobTitleChange = (event: {
         target: { value: SetStateAction<string> }
     }) => {
         setJobTitle(event.target.value)
     }
-
     const handleJobDescriptionChange = (event: {
         target: { value: SetStateAction<string> }
     }) => {
         setJobDescription(event.target.value)
+        console.log(event.target.value)
     }
 
-    // const handleFileChange = (files: File[]) => {
-    //     setSelectedFile(files)
-    // }
+    const noteRef = useRef("")
+    const handleTextAreaChange = (event: { target: { value: any } }) => {
+        const newValue = event.target.value
+        noteRef.current = newValue
+        console.log("newValue:", newValue)
+        console.log("noteChange:", noteRef.current)
+    }
 
+    const openModal = () =>
+        modals.openConfirmModal({
+            title: <b>Applicant Note</b>,
+            centered: true,
+            size: "md",
+            labels: { confirm: "Save", cancel: "Cancel" },
+            onConfirm: () => saveData(noteRef.current),
+            children: (
+                <div>
+                    <Textarea
+                        size="md"
+                        radius="md"
+                        description="Add a Note for this Applicant"
+                        placeholder="Enter your note here..."
+                        autosize
+                        minRows={4}
+                        onChange={handleTextAreaChange}
+                    />
+                </div>
+            ),
+        })
     const handleAnalyzeClick = async () => {
+        setSaved(false)
         if (file && jobTitle && jobDescription) {
             const formData = new FormData()
             formData.append("candidate1", file)
@@ -89,7 +106,7 @@ export default function Home() {
             setShowResults(false)
             axios
                 .post(
-                    "https://cce106resubot-backend.onrender.com/add", // "http://127.0.0.1:8000/add", // "https://cce106resubot-backend.onrender.com/add",
+                    "http://127.0.0.1:8000/add", // "https://cce106resubot-backend.onrender.com/add", // // "https://cce106resubot-backend.onrender.com/add",
                     formData,
                     {
                         headers: {
@@ -114,6 +131,7 @@ export default function Home() {
                         })
                     } else {
                         // Handle the error condition
+                        setLoading(false)
                         console.log("Error:", response.statusText)
                         notifications.show({
                             withCloseButton: true,
@@ -126,6 +144,8 @@ export default function Home() {
                     }
                 })
                 .catch(function (error) {
+                    setLoading(false)
+                    console.log("console.log")
                     console.log(error)
                     notifications.show({
                         withCloseButton: true,
@@ -148,6 +168,54 @@ export default function Home() {
             })
         }
     }
+    const saveData = async (note: string) => {
+        const formData = new FormData()
+        if (file) {
+            formData.append("candidate1", file)
+        }
+        formData.append("data", JSON.stringify(data))
+        console.log(JSON.stringify(data))
+        formData.append("note", note)
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/save",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Accept: "application/json",
+                    },
+                }
+            )
+
+            if (response.status === 200) {
+                console.log(response)
+                notifications.show({
+                    withCloseButton: true,
+                    autoClose: 3000,
+                    title: "Resume Added Successfully",
+                    message:
+                        "The applicant's resume has been successfully added to the 'Analyzed Resumes' section.",
+                    color: "green",
+                    loading: false,
+                })
+                setSaved(true)
+            } else {
+                throw new Error("An error occurred")
+            }
+        } catch (error) {
+            console.error(error)
+            notifications.show({
+                withCloseButton: true,
+                autoClose: 5000,
+                title: "An error occurreds",
+                message: "Oops, there is something wrong",
+                color: "red",
+                loading: false,
+            })
+        }
+    }
+
     return (
         <Container size="lg" style={{ padding: "20px" }}>
             <Center>
@@ -165,10 +233,10 @@ export default function Home() {
                             Resume Analysis
                         </Title>
                         <Text className={classes.description} c="dimmed">
-                            ResuBot utilizes AI technology to thoroughly assess
-                            resumes, providing valuable insights that assist
-                            recruiters in making informed decisions and
-                            streamlining their recruitment processes.
+                            ResuBot employs AI technology to comprehensively
+                            evaluate resumes, delivering valuable insights to
+                            aid recruiters in making informed decisions and
+                            optimizing their hiring procedures.
                         </Text>
                     </div>
 
@@ -271,15 +339,6 @@ export default function Home() {
                             </span>{" "}
                             Result
                         </Title>
-                        <div>
-                            <Text
-                                fw={700}
-                                fz="lg"
-                                className={classes.itemTitle}>
-                                Summary
-                            </Text>
-                            <Text c="dimmed">{data?.summary}</Text>
-                        </div>
                     </Flex>
                     <Flex
                         mih={50}
@@ -287,7 +346,8 @@ export default function Home() {
                         justify="center"
                         align="flex-start"
                         direction="column"
-                        wrap="wrap">
+                        wrap="wrap"
+                        pb="lg">
                         <div className={classes.item}>
                             <div>
                                 <Text
@@ -360,7 +420,19 @@ export default function Home() {
                                 </List>
                             </div>
                         </div>
+                        <div>
+                            <Text
+                                fw={700}
+                                fz="lg"
+                                className={classes.itemTitle}>
+                                Summary
+                            </Text>
+                            <Text c="dimmed">{data?.summary}</Text>
+                        </div>
                     </Flex>
+                    <Button onClick={() => openModal()} disabled={saved}>
+                        {saved ? "Saved" : "Save"}
+                    </Button>
                 </div>
             )}
         </Container>
