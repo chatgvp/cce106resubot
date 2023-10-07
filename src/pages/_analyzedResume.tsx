@@ -162,7 +162,7 @@ export default function AnalyzedResume() {
                     <Textarea
                         size="md"
                         radius="md"
-                        description="Add note to this candidate"
+                        description="Add note to this candidate's note"
                         defaultValue={note}
                         autosize
                         minRows={4}
@@ -317,7 +317,7 @@ export default function AnalyzedResume() {
             centered: true,
             children: (
                 <Text size="sm">
-                    Are you sure you want to delete <b>{name}</b>'s data? This
+                    Are you sure you want to delete <b>{name}</b>s data? This
                     action will not be undone and permanently deleted from the
                     database.
                 </Text>
